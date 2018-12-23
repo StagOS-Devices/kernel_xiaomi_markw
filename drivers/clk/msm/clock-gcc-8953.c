@@ -388,6 +388,7 @@ static struct clk_freq_tbl ftbl_gfx3d_clk_src[] = {
 	F_MM( 560000000,    1120000000,               gpll3,    1,    0,     0),
 	F_MM( 650000000,    1300000000,               gpll3,    1,    0,     0),
 	F_MM( 700000000,    1400000000,               gpll3,    1,    0,     0),
+	F_MM( 750000000,    1460000000,               gpll3,    1,    0,     0),
 
 	F_END
 };
@@ -4127,3 +4128,4 @@ static int __init msm_gcc_gfx_init(void)
 	return platform_driver_register(&msm_clock_gcc_gfx_driver);
 }
 arch_initcall_sync(msm_gcc_gfx_init);
+
