@@ -1237,3 +1237,4 @@ const struct inode_operations f2fs_special_inode_operations = {
 	.removexattr    = generic_removexattr,
 #endif
 };
+
