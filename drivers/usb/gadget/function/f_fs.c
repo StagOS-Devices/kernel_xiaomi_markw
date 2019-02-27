@@ -3605,12 +3605,6 @@ static void ffs_closed(struct ffs_data *ffs)
 	    || !atomic_read(&opts->func_inst.group.cg_item.ci_kref.refcount))
 		goto done;
 
-	ci = opts->func_inst.group.cg_item.ci_parent->ci_parent;
-	ffs_dev_unlock();
-
-	if (test_bit(FFS_FL_BOUND, &ffs->flags))
-		unregister_gadget_item(ci);
-	return;
 done:
 	ffs_dev_unlock();
 }
@@ -3658,3 +3652,4 @@ static char *ffs_prepare_buffer(const char __user *buf, size_t len,
 DECLARE_USB_FUNCTION_INIT(ffs, ffs_alloc_inst, ffs_alloc);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Michal Nazarewicz");
+
