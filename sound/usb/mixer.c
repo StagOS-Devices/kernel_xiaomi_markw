@@ -1811,7 +1811,7 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
 				char *name)
 {
 	struct uac_processing_unit_descriptor *desc = raw_desc;
-	int num_ins = desc->bNrInPins;
+	int num_ins;
 	struct usb_mixer_elem_info *cval;
 	struct snd_kcontrol *kctl;
 	int i, err, nameid, type, len;
@@ -1826,7 +1826,13 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
 		0, NULL, default_value_info
 	};
 
-	if (desc->bLength < 13 || desc->bLength < 13 + num_ins ||
+	if (desc->bLength < 13) {
+		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
+		return -EINVAL;
+	}
+
+	num_ins = desc->bNrInPins;
+	if (desc->bLength < 13 + num_ins ||
 	    desc->bLength < num_ins + uac_processing_unit_bControlSize(desc, state->mixer->protocol)) {
 		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
 		return -EINVAL;
@@ -2203,7 +2209,7 @@ static int parse_audio_unit(struct mixer_build *state, int unitid)
 static void snd_usb_mixer_free(struct usb_mixer_interface *mixer)
 {
 	/* kill pending URBs */
-	snd_usb_mixer_disconnect(mixer);
+	snd_usb_mixer_disconnect(&mixer->list);
 
 	kfree(mixer->id_elems);
 	if (mixer->urb) {
@@ -2536,8 +2542,11 @@ _error:
 	return err;
 }
 
-void snd_usb_mixer_disconnect(struct usb_mixer_interface *mixer)
+void snd_usb_mixer_disconnect(struct list_head *p)
 {
+	struct usb_mixer_interface *mixer;
+
+	mixer = list_entry(p, struct usb_mixer_interface, list);
 	if (mixer->disconnected)
 		return;
 	if (mixer->urb)
@@ -2625,4 +2634,3 @@ int snd_usb_mixer_resume(struct usb_mixer_interface *mixer, bool reset_resume)
 	return snd_usb_mixer_activate(mixer);
 }
 #endif
-
