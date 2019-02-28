@@ -50,11 +50,9 @@ source "drivers/media/platform/msm/camera_v2_markw/Kconfig"
 endif # MSMB_CAMERA
 endif
 
-if MACH_XIAOMI_MIDO
 if MSMB_CAMERA
 source "drivers/media/platform/msm/camera_v2/Kconfig"
 endif # MSMB_CAMERA
-endif
 
 source "drivers/media/platform/msm/ais/Kconfig"
 source "drivers/media/platform/msm/dvb/Kconfig"
