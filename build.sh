@@ -1,8 +1,9 @@
 #!/bin/bash
 export ARCH=arm64 && export SUBARCH=arm64
-export CROSS_COMPILE=~/Toolchain/bin/aarch64-linux-gnu-
+export CROSS_COMPILE=~/Toolchain/bin/aarch64-linux-android-
 export USE_CCACHE=1
 export CCACHE_DIR=~/.ccache
+make mrpoper
 make O=out clean
 make O=out mrproper
 make O=out olympian_markw_defconfig
