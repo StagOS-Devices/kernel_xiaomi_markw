@@ -489,16 +489,30 @@ void f2fs_destroy_stats(struct f2fs_sb_info *sbi)
 	kfree(si);
 }
 
-void __init f2fs_create_root_stats(void)
+int __init f2fs_create_root_stats(void)
 {
-	f2fs_debugfs_root = debugfs_create_dir("f2fs", NULL);
+	struct dentry *file;
 
-	debugfs_create_file("status", S_IRUGO, f2fs_debugfs_root, NULL,
-			    &stat_fops);
+	f2fs_debugfs_root = debugfs_create_dir("f2fs", NULL);
+	if (!f2fs_debugfs_root)
+		return -ENOMEM;
+
+	file = debugfs_create_file("status", S_IRUGO, f2fs_debugfs_root,
+			NULL, &stat_fops);
+	if (!file) {
+		debugfs_remove(f2fs_debugfs_root);
+		f2fs_debugfs_root = NULL;
+		return -ENOMEM;
+	}
+
+	return 0;
 }
 
 void f2fs_destroy_root_stats(void)
 {
+	if (!f2fs_debugfs_root)
+		return;
+
 	debugfs_remove_recursive(f2fs_debugfs_root);
 	f2fs_debugfs_root = NULL;
 }
