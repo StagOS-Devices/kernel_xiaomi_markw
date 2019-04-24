@@ -18,7 +18,7 @@ REPACK_DIR=$KERNEL_DIR/zip
 OUT=$KERNEL_DIR/out
 VERSION="zeus"
 export ARCH=arm64 && export SUBARCH=arm64
-export CROSS_COMPILE="/home/DarkAngelGR/Toolchain/bin/aarch64-linux-android-4.9/bin/aarch64-linux-android-"
+export CROSS_COMPILE=~/gcc/bin/aarch64-linux-gnu- 
 
 rm -rf out
 mkdir -p out
@@ -30,13 +30,13 @@ make O=out -j$(nproc --all)
 
 cd $REPACK_DIR
 cp $KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb $REPACK_DIR/
-FINAL_ZIP="OlympianKernel-${VERSION}.zip"
+FINAL_ZIP="OlympianKernel-${VERSION}-$(date +"%Y-%m-%d").zip"
 zip -r9 "${FINAL_ZIP}" *
 cp *.zip $OUT
 rm *.zip
 cd $KERNEL_DIR
 rm zip/Image.gz-dtb
-
+cd out
 BUILD_END=$(date +"%s")
 DIFF=$(($BUILD_END - $BUILD_START))
 echo -e "Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
