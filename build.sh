@@ -18,14 +18,14 @@ REPACK_DIR=$KERNEL_DIR/zip
 OUT=$KERNEL_DIR/out
 VERSION="zeus"
 export ARCH=arm64 && export SUBARCH=arm64
-export CROSS_COMPILE=~/gcc/bin/aarch64-linux-gnu- 
+export CROSS_COMPILE=~/Toolchain/bin/aarch64-linux-android- 
 
 rm -rf out
 mkdir -p out
 make mrproper
 make O=out clean
 make O=out mrproper
-make O=out olympian_markw_defconfig
+make O=out olympian_defconfig
 make O=out -j$(nproc --all)
 
 cd $REPACK_DIR
